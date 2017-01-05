@@ -505,4 +505,32 @@ describe("uploader.basic.api.js", function () {
             assert.equal(formattedSize, "9.6GB");
         });
     });
+
+    describe("_validateFileOrBlobData", function() {
+        var originalFileOrInput = qq.isFileOrInput;
+        beforeEach(function () {
+            fineuploader = new qq.FineUploaderBasic();
+        });
+        afterEach(function() {
+            qq.isFileOrInput = originalFileOrInput;
+        });
+
+        it("fails if file is empty and allowEmpty is false", function() {
+            qq.isFileOrInput = function() { return true; };
+            fineuploader._fileOrBlobRejected = function() {};
+            var validationDescriptor = { size: 0 };
+
+            fineuploader._validateFileOrBlobData({}, validationDescriptor)
+                .then(function() { assert.fail(); }, function() {});
+        });
+
+        it("passes if file is empty and allowEmpty is true", function() {
+            fineuploader._options.validation.allowEmpty = true;
+            qq.isFileOrInput = function() { return true; };
+            var validationDescriptor = { size: 0 };
+
+            fineuploader._validateFileOrBlobData({}, validationDescriptor)
+                .then(function() {}, function() { assert.fail(); });
+        });
+    });
 });
