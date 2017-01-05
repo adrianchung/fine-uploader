@@ -515,26 +515,22 @@ describe("uploader.basic.api.js", function () {
             qq.isFileOrInput = originalFileOrInput;
         });
 
-        it("fails if file is empty and allowEmpty is false", function() {
-            var result = 1;
+        it("fails if file is empty and allowEmpty is false", function(done) {
             qq.isFileOrInput = function() { return true; };
-            fineuploader._fileOrBlobRejected = function() { result = -1; };
+            fineuploader._fileOrBlobRejected = function() {};
             var validationDescriptor = { size: 0 };
 
             fineuploader._validateFileOrBlobData({}, validationDescriptor)
-                .done(function() { assert.equal(-1, result); });
+                .then(function() { assert.fail(); }, function() { done(); });
         });
 
-        it("passes if file is empty and allowEmpty is true", function() {
+        it("passes if file is empty and allowEmpty is true", function(done) {
             fineuploader._options.validation.allowEmpty = true;
-
-            var result = 1;
             qq.isFileOrInput = function() { return true; };
-            fineuploader._fileOrBlobRejected = function() { result = -1; };
             var validationDescriptor = { size: 0 };
 
             fineuploader._validateFileOrBlobData({}, validationDescriptor)
-                .done(function() { assert.equal(1, result); });
+                .then(function() { done(); }, function() { assert.fail(); });
         });
     });
 });
