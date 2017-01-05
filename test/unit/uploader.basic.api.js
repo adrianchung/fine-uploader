@@ -516,21 +516,25 @@ describe("uploader.basic.api.js", function () {
         });
 
         it("fails if file is empty and allowEmpty is false", function() {
+            var result = 1;
             qq.isFileOrInput = function() { return true; };
-            fineuploader._fileOrBlobRejected = function() {};
+            fineuploader._fileOrBlobRejected = function() { result = -1; };
             var validationDescriptor = { size: 0 };
 
             fineuploader._validateFileOrBlobData({}, validationDescriptor)
-                .then(function() { assert.fail(); }, function() {});
+                .done(function() { assert.equal(-1, result); });
         });
 
         it("passes if file is empty and allowEmpty is true", function() {
             fineuploader._options.validation.allowEmpty = true;
+
+            var result = 1;
             qq.isFileOrInput = function() { return true; };
+            fineuploader._fileOrBlobRejected = function() { result = -1; };
             var validationDescriptor = { size: 0 };
 
             fineuploader._validateFileOrBlobData({}, validationDescriptor)
-                .then(function() {}, function() { assert.fail(); });
+                .done(function() { assert.equal(1, result); });
         });
     });
 });
