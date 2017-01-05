@@ -479,4 +479,30 @@ describe("uploader.basic.api.js", function () {
             uploader._handleNewFile(fileInput, 0, []);
         });
     });
+
+    describe("_formatSize", function() {
+        beforeEach(function () {
+            fineuploader = new qq.FineUploaderBasic();
+        });
+
+        it("formats 0 bytes properly", function() {
+            var formattedSize = fineuploader._formatSize(0);
+            assert.equal(formattedSize, "0kB");
+        });
+
+        it("formats kB properly", function() {
+            var formattedSize = fineuploader._formatSize(789);
+            assert.equal(formattedSize, "0.8kB");
+        });
+
+        it("formats MB properly", function() {
+            var formattedSize = fineuploader._formatSize(2123456);
+            assert.equal(formattedSize, "2.1MB");
+        });
+
+        it("formats GB properly", function() {
+            var formattedSize = fineuploader._formatSize(9602123456);
+            assert.equal(formattedSize, "9.6GB");
+        });
+    });
 });
